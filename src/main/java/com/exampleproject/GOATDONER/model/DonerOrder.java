@@ -1,9 +1,11 @@
 package com.exampleproject.GOATDONER.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -11,10 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Entity
 public class DonerOrder implements Serializable {
     private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private Date placedAt;
+    private Date placedAt = new Date(System.currentTimeMillis());
 
     @NotBlank(message = "Delivery name is required")
     private String DeliveryName;
@@ -33,6 +38,7 @@ public class DonerOrder implements Serializable {
     @Digits(integer = 3, fraction = 0, message = "Invalid CVV")
     private String ccCVV;
 
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Doner> donerList = new ArrayList<>();
 
     public void addDoner (Doner doner){
