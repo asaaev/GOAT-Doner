@@ -1,5 +1,6 @@
 package com.exampleproject.GOATDONER.controllers;
 
+import com.exampleproject.GOATDONER.data.OrderRepository;
 import com.exampleproject.GOATDONER.model.DonerOrder;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,12 @@ import org.springframework.web.bind.support.SessionStatus;
 @SessionAttributes("donerOrder")
 public class OrderController {
 
+    private OrderRepository orderRepository;
+
+    public OrderController(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
     @GetMapping("/current")
     public String orderForm(){
         return "orderForm";
@@ -26,7 +33,7 @@ public class OrderController {
         if (errors.hasErrors()){
             return "orderForm";
         }
-        log.info("Order Submitted: {}", order);
+        orderRepository.save(order);
         status.setComplete();
         return "redirect:/home";
     }
